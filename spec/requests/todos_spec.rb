@@ -17,10 +17,10 @@ RSpec.describe "Todos API", type: :request do
 
     it "returns todos" do
       # JSON is a custom helper we will add to spec helper
-      expect(json).not_to be_empty
+      expect(json_body).not_to be_empty
 
       # TODO: this test might return a false positive!
-      expect(json.size).to eq(10)
+      expect(json_body.size).to eq(10)
     end
 
     # Note this test is separate from the JSON test - it is separate behavior
@@ -40,8 +40,8 @@ RSpec.describe "Todos API", type: :request do
     # Context block!
     context "when the record exists" do
       it "returns the todo" do
-        expect(json).not_to be_empty
-        expect(json["id"]).to eq(todo_id)
+        expect(json_body).not_to be_empty
+        expect(json_body["id"]).to eq(todo_id)
       end
 
       it "returns a status code of 200" do
@@ -59,7 +59,7 @@ RSpec.describe "Todos API", type: :request do
 
       it "returns a not found message" do
         # Note use of regexp match here:
-        expect(response).to match(/Couldn't find todo/)
+        expect(response.body).to match(/Couldn't find Todo/)
       end
     end
   end
@@ -73,7 +73,7 @@ RSpec.describe "Todos API", type: :request do
       before { post "/todos", params: valid_attributes}
 
       it "creates a todo" do
-        expect(json["title"]).to eq("Learn MOAR TDD")
+        expect(json_body["title"]).to eq("Learn MOAR TDD")
       end
 
       it "returns a status code of 201" do
@@ -99,7 +99,7 @@ RSpec.describe "Todos API", type: :request do
     let(:valid_attributes) {{title: "Rock the Casbah"}}
 
     context "when the record exists" do
-      before { put "todos/#{todo_id}", params: valid_attributes }
+      before { put "/todos/#{todo_id}", params: valid_attributes }
 
       it "updates the record" do
         # We should test more than this!
